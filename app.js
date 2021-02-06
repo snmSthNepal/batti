@@ -1,22 +1,38 @@
 const express = require('express');
 const app = express();
-//const port = 3000;
-const validUser = "sanam";
 
-var name = process.argv.slice(2);
-console.log("Passed argument is: " + name[0]);
 
-var path = "COM3";
-var ModbusRTU = require("modbus-serial");
+var ModbusRTU = require("custombus");
+const SerialPort = require('serialport');
+var path = new SerialPort("COM3");
 var client = new ModbusRTU();
-client.connectRTUBuffered("COM3", { baudRate: 9600 }, false);
+client.connectRTUBuffered("COM3", { autoOpen: false, baudRate: 9600, stopbits: 1, databits: 8, parity: 'none' }, false);
 client.setID(1);
+client.setTimeout(500)
 
 setInterval(function () {
-    client.readHoldingRegisters(0, 10, function (err, data) {
-        console.log(data);
-    });
+    try {
+        client.readHoldingRegisters(0, 10, function (err, data) {
+            console.log(data);
+        });
+    } catch (err) {
+        console.log("Error Encountered: " + err)
+    }
+    
 }, 1000);
+
+//process.exit();
+
+/*function read() {
+
+    try {
+        var data = client.readHoldingRegisters(0, 20);
+        console.log(data);
+    } catch (err) {
+        console.log("Error Encountered: " + err)
+    }
+}*/
+
 
 
 /*function write() {
@@ -28,12 +44,6 @@ setInterval(function () {
         .then(read);
 }*/
 
-/*function read() {
-    // read the 2 registers starting at address 5
-    // on device number 1.
-        var data = client.readHoldingRegisters(0000, 20)
-    console.log(data)
-    } */
 
 
 
