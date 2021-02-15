@@ -1,5 +1,5 @@
 var SerialPort = require('serialport')
-this.path = new SerialPort('COM3', { autoOpen: false, baudRate: 9600, dataBits: 8, stopBits: 1 });
+this.path = new SerialPort('/dev/ttyUSB0', { autoOpen: false, baudRate: 9600, dataBits: 8, stopBits: 1 });
 
 /*this.port.open(function (err) {
 

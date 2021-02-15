@@ -2,23 +2,23 @@ const express = require('express');
 const app = express();
 
 
-var ModbusRTU = require("custombus");
+var ModbusRTU = require("modbus-serial");
 const SerialPort = require('serialport');
-var path = new SerialPort("COM3");
+var path = new SerialPort("/dev/ttyUSB0");
 var client = new ModbusRTU();
-client.connectRTUBuffered("COM3", { autoOpen: false, baudRate: 9600, stopbits: 1, databits: 8, parity: 'none' }, false);
+client.connectRTUBuffered("/dev/ttyUSB0", { autoOpen: false, baudRate: 9600, stopbits: 1, databits: 8, parity: 'none' }, false);
 client.setID(1);
 client.setTimeout(500)
 
 setInterval(function () {
     try {
-        client.readHoldingRegisters(0, 10, function (err, data) {
+        client.readHoldingRegisters(0, 7, function (err, data) {
             console.log(data);
         });
     } catch (err) {
         console.log("Error Encountered: " + err)
     }
-    
+
 }, 1000);
 
 //process.exit();
